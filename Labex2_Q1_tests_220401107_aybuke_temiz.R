@@ -1,5 +1,5 @@
 library(testthat)
-setwd("/home/sarp/Desktop/cevik2odev")
+setwd("/home/sarp/Desktop/cevikodev")
 current_dir <- getwd()
 print(current_dir)
 relative_path <- file.path(current_dir, "Labex2_Q1_220401107_aybuke_temiz.R")
