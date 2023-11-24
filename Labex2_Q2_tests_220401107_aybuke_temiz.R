@@ -1,66 +1,81 @@
 library(testthat)
+setwd("/home/sarp/Desktop/cevikodev")
+current_dir <- getwd()
+print(current_dir)
+relative_path <- file.path(current_dir, "Labex2_Q1_220401107_aybuke_temiz.R")
 
-testthat::test_that("Global Workspace'te spotify_token adl?? bir de??i??ken olmal??", {
-  expect_true(exists("spotify_token", envir = .GlobalEnv))
+source(relative_path)
+
+
+# Test 2.1
+test_that("Global Workspace’de spotify_search_artist adlı bir değişken olmalı.", {
+  expect_true(exists("spotify_search_artist"))
 })
 
-
-#Test 1.2) 
-testthat::test_that("spotify_token adl?? de??i??kenin tipi 'function' olmal??", {
-  expect_true(is.function(spotify_token))
+# Test 2.2: spotify_search_artist adlı değişkenin tipi “function” olmalı.
+test_that("spotify_search_artist adlı değişkenin tipi 'function' olmalı.", {
+  expect_is(spotify_search_artist, "function")
 })
 
-
-#Test 1.3)
-testthat::test_that("spotify_token() ??a??r??ld??????nda d??nd??rd?????? ????kt?? bir liste olmal??", {
-  result <- spotify_token()
-  expect_true(is.list(result))
+# Test 2.3: spotify_search_artist() herhangi bir artist ismi ile çağrıldığında döndürdüğü çıktı bir liste olmalı.
+test_that("spotify_search_artist() herhangi bir artist ismi ile çağrıldığında döndürdüğü çıktı bir liste olmalı.", {
+  result <- spotify_search_artist("Random Artist")
+  expect_is(result, "list")
 })
 
-#Test 1.4)
-testthat::test_that("spotify_token() ??a??r??ld??????nda d??nd??rd?????? listenin iki elementi olmal??", {
-  result <- spotify_token()
+# Test 2.4: spotify_search_artist() çağrıldığında döndürdüğü listenin iki elementi olmalı
+test_that("spotify_search_artist() çağrıldığında döndürdüğü listenin iki elementi olmalı.", {
+  result <- spotify_search_artist("Random Artist")
   expect_length(result, 2)
 })
 
-#Test 1.5)
-testthat::test_that("spotify_token() ??a??r??ld??????nda d??nd??rd?????? listenin ilk elementinin ismi status_code olmal??", {
-  result <- spotify_token()
-  expect_true("status_code" %in% names(result))
+# Test 2.5
+test_that("spotify_search_artist() çağrıldığında döndürdüğü listenin ilk elementinin ismi status_code olmalı.", {
+  result <- spotify_search_artist("Random Artist")
+  expect_named(result, c("status_code", "search_results"))
 })
 
-#Test 1.6)
-testthat::test_that("spotify_token() ??a??r??ld??????nda d??nd??rd?????? listenin ilk elementinin class'?? numeric olmal??", {
-  result <- spotify_token()
+# Test 2.6
+test_that("spotify_search_artist() çağrıldığında döndürdüğü listenin ilk elementinin class’ı numeric olmalı", {
+  result <- spotify_search_artist("Random Artist")
   expect_true(is.numeric(result$status_code))
 })
 
-#Test 1.7)
-testthat::test_that("spotify_token() ??a??r??ld??????nda d??nd??rd?????? listenin status_code adl?? elementinin de??eri 200'e e??it olmal??", {
-  result <- spotify_token()
+# Test 2.7: spotify_search_artist() çağrıldığında döndürdüğü listenin status_code adlı elementinin değeri 200’e eşit olmalı
+test_that("spotify_search_artist() çağrıldığında döndürdüğü listenin status_code adlı elementinin değeri 200’e eşit olmalı.", {
+  result <- spotify_search_artist("Random Artist")
   expect_equal(result$status_code, 200)
 })
 
-#Test 1.8)
-testthat::test_that("spotify_token() ??a??r??ld??????nda d??nd??rd?????? listenin ikinci elementinin ismi token olmal??", {
-  result <- spotify_token()
-  expect_true("token" %in% names(result))
+# Test 2.8
+test_that("spotify_search_artist() çağrıldığında döndürdüğü listenin ikinci elementinin ismi search_results olmalı", {
+  result <- spotify_search_artist("The Doors")
+  expect_named(result, c("status_code", "search_results"))
 })
 
-#Test 1.9)
-testthat::test_that("spotify_token() ??a??r??ld??????nda d??nd??rd?????? listenin ikinci elementinin class'?? character olmal??", {
-  result <- spotify_token()
-  expect_true(is.character(result$token))
+
+# Test 2.9: spotify_search_artist() çağrıldığında döndürdüğü listenin ikinci elementinin class’ı data.frame olmalı
+test_that("spotify_search_artist() çağrıldığında döndürdüğü listenin ikinci elementinin class’ı data.frame olmalı.", {
+  result <- spotify_search_artist("Random Artist")
+  expect_is(result$search_results, "data.frame")
+}
+)
+
+# Test 2.10
+test_that("spotify_search_artist() çağrıldığında döndürdüğü listenin ikinci elementinin iki sütun barındırmalı", {
+  result <- spotify_search_artist("Random Artist")
+  expect_length(names(result$search_results), 2)
 })
 
-#Test 1.10)
-testthat::test_that("spotify_token() ??a??r??ld??????nda d??nd??rd?????? listenin ikinci elementi 'Bearer ' ile ba??lamal??", {
-  result <- spotify_token()
-  expect_true(startsWith(result$token, "Bearer "))
+# Test 2.11
+test_that("spotify_search_artist() çağrıldığında döndürdüğü listenin ikinci elementinin sütun isimleri c('artist', 'id') olmalı", {
+  result <- spotify_search_artist("Random Artist")
+  expect_equal(names(result$search_results), c("artist", "id"))
 })
 
-#Test 1.11) 
-testthat::test_that("spotify_token() ??a??r??ld??????nda d??nd??rd?????? listenin ikinci elementi character de??i??keninin i??inde 122 adet harf bulunmal??", {
-  result <- spotify_token()
-  expect_length(strsplit(result$token, "")[[1]], 122)
+# Test 2.11
+test_that("spotify_search_artist('The Doors') çağrıldığında döndürdüğü listenin ikinci elementinin birinci satırının 'id' adlı sütunu '22WZ7M8sxp5THdruNY3gXt' olmalı", {
+  result <- spotify_search_artist("The Doors")
+  expect_equal(result$search_results[1, "id"], "22WZ7M8sxp5THdruNY3gXt")
 })
+
